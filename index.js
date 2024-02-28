@@ -31,7 +31,7 @@ app.get("/register", (req, res) => {
   res.render("register");
 });
 app.post("/register", async (req, res) => {
-  const user = await userModel.findOne({ username: req.body.username });
+  const user = await userModel.findOne({ email: req.body.email });
   if (user) return res.send("User existed");
   const newUser = await userModel.create(req.body);
   res.json({ data: newUser, message: "sucess" });
@@ -64,5 +64,5 @@ app.get("/logout", (req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`Server is running at port:${PORT}`);
+  console.log(`listening at http://localhost:${PORT}`);
 });

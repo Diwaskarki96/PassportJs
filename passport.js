@@ -2,16 +2,22 @@ const LocalStrategy = require("passport-local").Strategy;
 const userModel = require("./db");
 const initializingPassport = (passport) => {
   passport.use(
-    new LocalStrategy(async (username, password, done) => {
-      try {
-        const user = await userModel.findOne({ username: username });
-        if (!user) return done(null, false);
-        if (user.password !== password) return done(null, false);
-        return done(null, user);
-      } catch (error) {
-        return done(error, false);
+    new LocalStrategy(
+      {
+        usernameField: "email",
+        passwordField: "password",
+      },
+      async (email, password, done) => {
+        try {
+          const user = await userModel.findOne({ email: email });
+          if (!user) return done(null, false);
+          if (user.password !== password) return done(null, false);
+          return done(null, user);
+        } catch (error) {
+          return done(error, false);
+        }
       }
-    })
+    )
   );
   passport.serializeUser((user, done) => {
     done(null, user.id);
